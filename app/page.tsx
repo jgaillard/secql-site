@@ -304,9 +304,9 @@ except RateLimited as e:
         <p className="text-[var(--muted)] mb-10">
           Start free. Scale when you&apos;re ready.
         </p>
-        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl">
+        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl items-stretch">
           {/* Free */}
-          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
+          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
             <div className="text-sm text-[var(--muted)] font-mono mb-3">
               Free
             </div>
@@ -316,7 +316,7 @@ except RateLimited as e:
             <p className="text-sm text-[var(--muted)] mb-5">
               No credit card required
             </p>
-            <ul className="space-y-2 text-sm mb-6">
+            <ul className="space-y-2 text-sm flex-1">
               <li className="flex items-center gap-2">
                 <span className="text-emerald-400">&#10003;</span> 100
                 requests/day
@@ -333,19 +333,19 @@ except RateLimited as e:
             </ul>
             <a
               href="#get-started"
-              className="block text-center px-4 py-2 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
+              className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
             >
               Get Free Key
             </a>
           </div>
 
           {/* Pro */}
-          <div className="border-2 border-[var(--accent)] rounded-lg bg-[var(--card)] p-6 relative">
-            <div className="absolute -top-2.5 left-4 px-2 py-0.5 bg-[var(--accent)] text-white text-xs font-medium rounded">
-              Most popular
-            </div>
-            <div className="text-sm text-[var(--muted)] font-mono mb-3">
-              Pro
+          <div className="border-2 border-[var(--accent)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-sm text-[var(--muted)] font-mono">Pro</span>
+              <span className="px-1.5 py-0.5 bg-[var(--accent)] text-white text-[10px] font-medium rounded uppercase tracking-wide">
+                Popular
+              </span>
             </div>
             <div className="flex items-baseline gap-1 mb-1">
               <span className="text-3xl font-bold">$19</span>
@@ -354,7 +354,7 @@ except RateLimited as e:
             <p className="text-sm text-[var(--muted)] mb-5">
               For production apps
             </p>
-            <ul className="space-y-2 text-sm mb-6">
+            <ul className="space-y-2 text-sm flex-1">
               <li className="flex items-center gap-2">
                 <span className="text-emerald-400">&#10003;</span> 50,000
                 requests/mo
@@ -370,22 +370,20 @@ except RateLimited as e:
                 Pandas
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-[var(--muted)]">+</span>{" "}
-                <span className="text-[var(--muted)]">
-                  $0.002/req overage
-                </span>
+                <span className="text-emerald-400">&#10003;</span>{" "}
+                $0.002/req overage
               </li>
             </ul>
             <a
               href="#get-started"
-              className="block text-center px-4 py-2 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition"
+              className="block text-center px-4 py-2.5 mt-6 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition"
             >
               Start Pro
             </a>
           </div>
 
           {/* Enterprise */}
-          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
+          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
             <div className="text-sm text-[var(--muted)] font-mono mb-3">
               Enterprise
             </div>
@@ -395,7 +393,7 @@ except RateLimited as e:
             <p className="text-sm text-[var(--muted)] mb-5">
               For teams at scale
             </p>
-            <ul className="space-y-2 text-sm mb-6">
+            <ul className="space-y-2 text-sm flex-1">
               <li className="flex items-center gap-2">
                 <span className="text-emerald-400">&#10003;</span> Unlimited
                 requests
@@ -415,7 +413,7 @@ except RateLimited as e:
             </ul>
             <a
               href="mailto:contact@secql.dev"
-              className="block text-center px-4 py-2 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
+              className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
             >
               Contact Us
             </a>
