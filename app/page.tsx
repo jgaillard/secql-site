@@ -300,46 +300,126 @@ except RateLimited as e:
         id="pricing"
         className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]"
       >
-        <h2 className="text-2xl font-bold mb-10">Pricing</h2>
-        <div className="max-w-sm border border-[var(--border)] rounded-lg bg-[var(--card)] p-8">
-          <div className="text-sm text-[var(--muted)] font-mono mb-2">
-            Pay as you go
+        <h2 className="text-2xl font-bold mb-2">Pricing</h2>
+        <p className="text-[var(--muted)] mb-10">
+          Start free. Scale when you&apos;re ready.
+        </p>
+        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl">
+          {/* Free */}
+          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
+            <div className="text-sm text-[var(--muted)] font-mono mb-3">
+              Free
+            </div>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span className="text-3xl font-bold">$0</span>
+            </div>
+            <p className="text-sm text-[var(--muted)] mb-5">
+              No credit card required
+            </p>
+            <ul className="space-y-2 text-sm mb-6">
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> 100
+                requests/day
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> 5 req/min
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> All endpoints
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> Python SDK
+              </li>
+            </ul>
+            <a
+              href="#get-started"
+              className="block text-center px-4 py-2 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
+            >
+              Get Free Key
+            </a>
           </div>
-          <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-4xl font-bold">$0.002</span>
-            <span className="text-[var(--muted)]">/ request</span>
+
+          {/* Pro */}
+          <div className="border-2 border-[var(--accent)] rounded-lg bg-[var(--card)] p-6 relative">
+            <div className="absolute -top-2.5 left-4 px-2 py-0.5 bg-[var(--accent)] text-white text-xs font-medium rounded">
+              Most popular
+            </div>
+            <div className="text-sm text-[var(--muted)] font-mono mb-3">
+              Pro
+            </div>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span className="text-3xl font-bold">$19</span>
+              <span className="text-[var(--muted)] text-sm">/mo</span>
+            </div>
+            <p className="text-sm text-[var(--muted)] mb-5">
+              For production apps
+            </p>
+            <ul className="space-y-2 text-sm mb-6">
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> 50,000
+                requests/mo
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> 60 req/min
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> All endpoints
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> Python SDK +
+                Pandas
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-[var(--muted)]">+</span>{" "}
+                <span className="text-[var(--muted)]">
+                  $0.002/req overage
+                </span>
+              </li>
+            </ul>
+            <a
+              href="#get-started"
+              className="block text-center px-4 py-2 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition"
+            >
+              Start Pro
+            </a>
           </div>
-          <p className="text-sm text-[var(--muted)] mb-6">
-            First 1,000 requests/month free
-          </p>
-          <ul className="space-y-2 text-sm mb-8">
-            <li className="flex items-center gap-2">
-              <span className="text-emerald-400">&#10003;</span> All endpoints
-              included
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-emerald-400">&#10003;</span> 100
-              requests/minute
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-emerald-400">&#10003;</span> Python SDK +
-              Pandas
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-emerald-400">&#10003;</span> No monthly
-              minimums
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-emerald-400">&#10003;</span> 8,000+
-              companies
-            </li>
-          </ul>
-          <a
-            href="#get-started"
-            className="block text-center px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition"
-          >
-            Get API Key
-          </a>
+
+          {/* Enterprise */}
+          <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
+            <div className="text-sm text-[var(--muted)] font-mono mb-3">
+              Enterprise
+            </div>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span className="text-3xl font-bold">Custom</span>
+            </div>
+            <p className="text-sm text-[var(--muted)] mb-5">
+              For teams at scale
+            </p>
+            <ul className="space-y-2 text-sm mb-6">
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> Unlimited
+                requests
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> Custom rate
+                limits
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> SLA +
+                priority support
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-400">&#10003;</span> Dedicated
+                account
+              </li>
+            </ul>
+            <a
+              href="mailto:contact@secql.dev"
+              className="block text-center px-4 py-2 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
+            >
+              Contact Us
+            </a>
+          </div>
         </div>
       </section>
 
