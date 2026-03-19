@@ -90,7 +90,7 @@ function OGContent() {
       >
         <span>8,000+ companies</span>
         <span style={{ color: "#3f3f46" }}>|</span>
-        <span>10 years of history</span>
+        <span>15+ years of history</span>
         <span style={{ color: "#3f3f46" }}>|</span>
         <span>From $0/month</span>
       </div>

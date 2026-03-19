@@ -6,10 +6,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "SecQL — Clean SEC EDGAR Data for Developers",
   description:
-    "REST API + Python SDK for SEC financial data. Company profiles, financials, filings. 8,000+ companies, 10 years of history. $0.002/request.",
+    "REST API + Python SDK for SEC financial data. Company profiles, financials, filings. 8,000+ companies, 15+ years of history. $0.002/request.",
   openGraph: {
     title: "SecQL — Clean SEC EDGAR Data for Developers",
-    description: "REST API + Python SDK for SEC financial data. 8,000+ companies, 10 years of history.",
+    description: "REST API + Python SDK for SEC financial data. 8,000+ companies, 15+ years of history.",
     url: "https://secql.dev",
     siteName: "SecQL",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SecQL — Clean SEC EDGAR Data for Developers",
-    description: "REST API + Python SDK for SEC financial data. 8,000+ companies, 10 years of history.",
+    description: "REST API + Python SDK for SEC financial data. 8,000+ companies, 15+ years of history.",
   },
 };
 

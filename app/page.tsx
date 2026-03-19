@@ -125,7 +125,7 @@ export default function Home() {
             </h1>
             <p className="text-lg text-[var(--muted)] leading-relaxed mb-10 max-w-lg">
               REST API + Python SDK that transforms raw SEC EDGAR filings into
-              structured financial data. 8,000+ companies. 10 years of history.
+              structured financial data. 8,000+ companies. 15+ years of history.
             </p>
             <div className="flex gap-3">
               <a href="#get-started" className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition">
@@ -164,7 +164,7 @@ export default function Home() {
             <div className="text-sm text-[var(--muted)] mt-1">Public companies</div>
           </div>
           <div>
-            <div className="text-3xl sm:text-4xl font-bold">10 years</div>
+            <div className="text-3xl sm:text-4xl font-bold">15+ years</div>
             <div className="text-sm text-[var(--muted)] mt-1">Historical data</div>
           </div>
           <div>
@@ -180,7 +180,7 @@ export default function Home() {
         <p className="text-[var(--muted)] mb-10 max-w-lg">Stop parsing XBRL. Start building.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Feature icon="{ }" title="No XBRL complexity" description="We parse the SEC's XML taxonomy so you don't have to. Get clean JSON with the metrics you actually need." />
-          <Feature icon="10y" title="10 years of history" description="Up to 40 quarters of financial data per company. Revenue, net income, assets, liabilities, EPS, and more." />
+          <Feature icon="15y+" title="15+ years of history" description="Up to 80 periods of financial data per company. Revenue, net income, assets, liabilities, EPS, and more." />
           <Feature icon="8k+" title="8,000+ companies" description="Every public company that files with the SEC. Look up by ticker symbol, get data instantly." />
           <Feature icon="py" title="Python SDK" description="Official SDK with sync and async clients, Pandas DataFrame export, and typed exception handling." />
           <Feature icon="$" title="From $0/month" description="Generous free tier for prototyping. Pro at $19/mo for production. No surprises." />
@@ -298,7 +298,7 @@ except RateLimited as e:
                 ["Pandas support", "yes", "no", "no", "no"],
                 ["Structured JSON", "yes", "yes", "yes", "no"],
                 ["Rate limit", "60/min", "20/sec", "300/min", "10/sec"],
-                ["Historical depth", "10 years", "30+ years", "5 years", "All"],
+                ["Historical depth", "15+ years", "30+ years", "5 years", "All"],
                 ["Setup time", "60 seconds", "Minutes", "Minutes", "Hours"],
               ].map(([feature, secql, secapi, fmp, edgar]) => (
                 <tr key={feature} className="border-b border-[var(--border)]">
