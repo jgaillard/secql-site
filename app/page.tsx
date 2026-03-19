@@ -176,7 +176,7 @@ export default function Home() {
           <div className="mt-16">
             <CodeBlock label="Terminal">
               {`curl -H "X-API-Key: sk_live_..." \\
-  https://secql-production.up.railway.app/companies/AAPL/financials
+  https://api.secql.dev/companies/AAPL/financials
 
 {
   "ticker": "AAPL",
@@ -499,7 +499,7 @@ except RateLimited as e:
             <div className="pb-2 flex-1">
               <p className="font-medium mb-3">Get your API key</p>
               <CodeBlock>
-                {`curl -X POST https://secql-production.up.railway.app/keys \\
+                {`curl -X POST https://api.secql.dev/keys \\
   -H "Content-Type: application/json" \\
   -d '{"name": "my-app", "email": "you@example.com"}'`}
               </CodeBlock>
