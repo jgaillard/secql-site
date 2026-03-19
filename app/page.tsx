@@ -1,27 +1,69 @@
 function CodeBlock({ children, label }: { children: string; label?: string }) {
   return (
-    <div className="relative rounded-lg border border-[var(--border)] bg-[var(--code-bg)] overflow-hidden">
+    <div className="relative rounded-lg border border-[var(--border)] bg-[var(--code-bg)] overflow-hidden group">
       {label && (
-        <div className="px-4 py-2 border-b border-[var(--border)] text-xs text-[var(--muted)] font-mono">
-          {label}
+        <div className="px-4 py-2 border-b border-[var(--border)] text-xs text-[var(--muted)] font-mono flex items-center gap-2">
+          <span className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+          </span>
+          <span>{label}</span>
         </div>
       )}
       <pre className="p-4 overflow-x-auto text-sm leading-relaxed font-mono">
-        <code>{children}</code>
+        <code dangerouslySetInnerHTML={{ __html: colorize(children) }} />
       </pre>
     </div>
   );
 }
 
+function colorize(code: string): string {
+  return code
+    // Strings (double-quoted)
+    .replace(
+      /("(?:[^"\\]|\\.)*")/g,
+      '<span style="color:#a5d6a7">$1</span>'
+    )
+    // Single-quoted strings
+    .replace(
+      /('(?:[^'\\]|\\.)*')/g,
+      '<span style="color:#a5d6a7">$1</span>'
+    )
+    // Comments
+    .replace(
+      /(#.*?)(?=\n|$)/g,
+      '<span style="color:#616161">$1</span>'
+    )
+    // Python keywords
+    .replace(
+      /\b(from|import|async|await|def|with|as|try|except|print|return|True|False|None)\b/g,
+      '<span style="color:#ce93d8">$1</span>'
+    )
+    // Numbers (but not inside already-colored spans)
+    .replace(
+      /(?<!style="|color:|#|[a-zA-Z])\b(\d+\.?\d*)\b/g,
+      '<span style="color:#ffcc80">$1</span>'
+    )
+    // curl/http keywords
+    .replace(
+      /\b(curl|GET|POST|PUT|DELETE)\b/g,
+      '<span style="color:#80cbc4">$1</span>'
+    );
+}
+
 function Feature({
+  icon,
   title,
   description,
 }: {
+  icon: string;
   title: string;
   description: string;
 }) {
   return (
-    <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--card)]">
+    <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--card)] hover:border-zinc-600 transition">
+      <div className="text-lg mb-3">{icon}</div>
       <h3 className="text-base font-medium mb-2">{title}</h3>
       <p className="text-sm text-[var(--muted)] leading-relaxed">
         {description}
@@ -60,9 +102,9 @@ export default function Home() {
       {/* Nav */}
       <nav className="border-b border-[var(--border)] sticky top-0 bg-[var(--background)]/80 backdrop-blur-md z-50">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="font-mono font-bold text-lg tracking-tight">
+          <a href="/" className="font-mono font-bold text-lg tracking-tight">
             SecQL
-          </span>
+          </a>
           <div className="flex items-center gap-6">
             <a
               href="#api"
@@ -95,40 +137,45 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-6 pt-24 pb-20">
-        <div className="max-w-2xl">
-          <div className="inline-block px-3 py-1 rounded-full border border-[var(--border)] text-xs text-[var(--muted)] font-mono mb-6">
-            pip install secql
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
-            Clean SEC data.
-            <br />
-            <span className="text-[var(--muted)]">Excellent DX.</span>
-          </h1>
-          <p className="text-lg text-[var(--muted)] leading-relaxed mb-8 max-w-lg">
-            REST API + Python SDK that transforms raw SEC EDGAR filings into
-            structured financial data. 8,000+ companies. 10 years of history.
-          </p>
-          <div className="flex gap-3">
-            <a
-              href="#get-started"
-              className="px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition"
-            >
-              Get API Key
-            </a>
-            <a
-              href="#api"
-              className="px-5 py-2.5 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--card)] transition"
-            >
-              View Docs
-            </a>
-          </div>
-        </div>
+      <section className="relative overflow-hidden">
+        {/* Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Hero code example */}
-        <div className="mt-14">
-          <CodeBlock label="curl">
-            {`curl -H "X-API-Key: sk_live_..." \\
+        <div className="max-w-5xl mx-auto px-6 pt-28 pb-24 relative">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs text-[var(--muted)] font-mono mb-8 bg-[var(--card)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              pip install secql
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] mb-5">
+              Clean SEC data.
+              <br />
+              <span className="text-[var(--muted)]">Excellent DX.</span>
+            </h1>
+            <p className="text-lg text-[var(--muted)] leading-relaxed mb-10 max-w-lg">
+              REST API + Python SDK that transforms raw SEC EDGAR filings into
+              structured financial data. 8,000+ companies. 10 years of history.
+            </p>
+            <div className="flex gap-3">
+              <a
+                href="#get-started"
+                className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition"
+              >
+                Get API Key
+              </a>
+              <a
+                href="#api"
+                className="px-6 py-3 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--card)] transition"
+              >
+                View Docs
+              </a>
+            </div>
+          </div>
+
+          {/* Hero code example */}
+          <div className="mt-16">
+            <CodeBlock label="Terminal">
+              {`curl -H "X-API-Key: sk_live_..." \\
   https://secql-production.up.railway.app/companies/AAPL/financials
 
 {
@@ -140,37 +187,47 @@ export default function Home() {
   "eps_basic": 1.40,
   "currency": "USD"
 }`}
-          </CodeBlock>
+            </CodeBlock>
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]">
-        <h2 className="text-2xl font-bold mb-10">
+      <section className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
+        <h2 className="text-2xl font-bold mb-3">
           Built for fintech engineers
         </h2>
+        <p className="text-[var(--muted)] mb-10 max-w-lg">
+          Stop parsing XBRL. Start building.
+        </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Feature
+            icon="{ }"
             title="No XBRL complexity"
             description="We parse the SEC's XML taxonomy so you don't have to. Get clean JSON with the metrics you actually need."
           />
           <Feature
+            icon="10y"
             title="10 years of history"
             description="Up to 40 quarters of financial data per company. Revenue, net income, assets, liabilities, EPS, and more."
           />
           <Feature
+            icon="8k+"
             title="8,000+ companies"
             description="Every public company that files with the SEC. Look up by ticker symbol, get data instantly."
           />
           <Feature
+            icon="py"
             title="Python SDK"
             description="Official SDK with sync and async clients, Pandas DataFrame export, and typed exception handling."
           />
           <Feature
-            title="$0.002 / request"
-            description="Pay-as-you-go pricing. First 1,000 requests per month are free. No monthly minimums or commitments."
+            icon="$"
+            title="From $0/month"
+            description="Generous free tier for prototyping. Pro at $19/mo for production. No surprises."
           />
           <Feature
+            icon="!?"
             title="Structured errors"
             description="Every error response includes a message, hint, and documentation link. No guessing what went wrong."
           />
@@ -180,10 +237,10 @@ export default function Home() {
       {/* API Reference */}
       <section
         id="api"
-        className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]"
+        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
       >
         <h2 className="text-2xl font-bold mb-2">API Endpoints</h2>
-        <p className="text-[var(--muted)] mb-8">
+        <p className="text-[var(--muted)] mb-10">
           Four endpoints. That&apos;s it. Everything you need, nothing you
           don&apos;t.
         </p>
@@ -234,10 +291,10 @@ export default function Home() {
       {/* SDK */}
       <section
         id="sdk"
-        className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]"
+        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
       >
         <h2 className="text-2xl font-bold mb-2">Python SDK</h2>
-        <p className="text-[var(--muted)] mb-8">
+        <p className="text-[var(--muted)] mb-10">
           Sync, async, and Pandas — all in one package.
         </p>
 
@@ -298,7 +355,7 @@ except RateLimited as e:
       {/* Pricing */}
       <section
         id="pricing"
-        className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]"
+        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
       >
         <h2 className="text-2xl font-bold mb-2">Pricing</h2>
         <p className="text-[var(--muted)] mb-10">
@@ -424,20 +481,23 @@ except RateLimited as e:
       {/* Get Started */}
       <section
         id="get-started"
-        className="max-w-5xl mx-auto px-6 py-20 border-t border-[var(--border)]"
+        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
       >
         <h2 className="text-2xl font-bold mb-2">Get started in 60 seconds</h2>
-        <p className="text-[var(--muted)] mb-8">
+        <p className="text-[var(--muted)] mb-10">
           Three steps. No credit card required.
         </p>
 
-        <div className="space-y-4 max-w-2xl">
-          <div className="flex items-start gap-4">
-            <span className="shrink-0 w-7 h-7 rounded-full border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--muted)]">
-              1
-            </span>
-            <div>
-              <p className="font-medium mb-2">Get your API key</p>
+        <div className="max-w-2xl space-y-6">
+          <div className="flex items-start gap-5">
+            <div className="flex flex-col items-center">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
+                1
+              </span>
+              <div className="w-px h-full bg-[var(--border)] mt-2" />
+            </div>
+            <div className="pb-2 flex-1">
+              <p className="font-medium mb-3">Get your API key</p>
               <CodeBlock>
                 {`curl -X POST https://secql-production.up.railway.app/keys \\
   -H "Content-Type: application/json" \\
@@ -446,22 +506,27 @@ except RateLimited as e:
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <span className="shrink-0 w-7 h-7 rounded-full border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--muted)]">
-              2
-            </span>
-            <div>
-              <p className="font-medium mb-2">Install the SDK</p>
+          <div className="flex items-start gap-5">
+            <div className="flex flex-col items-center">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
+                2
+              </span>
+              <div className="w-px h-full bg-[var(--border)] mt-2" />
+            </div>
+            <div className="pb-2 flex-1">
+              <p className="font-medium mb-3">Install the SDK</p>
               <CodeBlock>{`pip install secql`}</CodeBlock>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <span className="shrink-0 w-7 h-7 rounded-full border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--muted)]">
-              3
-            </span>
-            <div>
-              <p className="font-medium mb-2">Fetch your first data</p>
+          <div className="flex items-start gap-5">
+            <div className="flex flex-col items-center">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
+                3
+              </span>
+            </div>
+            <div className="flex-1">
+              <p className="font-medium mb-3">Fetch your first data</p>
               <CodeBlock>
                 {`from secql import SecQL
 
@@ -474,11 +539,14 @@ print(client.financials("AAPL"))`}
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border)] mt-10">
-        <div className="max-w-5xl mx-auto px-6 py-8 flex items-center justify-between">
-          <span className="font-mono text-sm text-[var(--muted)]">
-            SecQL
-          </span>
+      <footer className="border-t border-[var(--border)]">
+        <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span className="font-mono font-bold text-sm">SecQL</span>
+            <span className="text-xs text-[var(--muted)]">
+              Clean SEC EDGAR data for developers
+            </span>
+          </div>
           <div className="flex items-center gap-6">
             <a
               href="https://github.com/jgaillard/secql"
