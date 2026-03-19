@@ -1,3 +1,28 @@
+import { CopyButton } from "./components/CopyButton";
+import { MobileNav } from "./components/MobileNav";
+import { TryItDemo } from "./components/TryItDemo";
+
+/* ── Syntax highlighting (single-pass, no nesting bugs) ───────────── */
+
+const TOKEN =
+  /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(#[^\n]*)|\b(from|import|async|await|def|with|as|try|except|print|return|True|False|None)\b|\b(curl|GET|POST|PUT|DELETE)\b|(\b\d+\.?\d*\b)/g;
+
+function colorize(code: string): string {
+  return code.replace(
+    TOKEN,
+    (match, str, comment, keyword, http, num) => {
+      if (str) return `<span style="color:#a5d6a7">${match}</span>`;
+      if (comment) return `<span style="color:#616161">${match}</span>`;
+      if (keyword) return `<span style="color:#ce93d8">${match}</span>`;
+      if (http) return `<span style="color:#80cbc4">${match}</span>`;
+      if (num) return `<span style="color:#ffcc80">${match}</span>`;
+      return match;
+    }
+  );
+}
+
+/* ── Shared components ────────────────────────────────────────────── */
+
 function CodeBlock({ children, label }: { children: string; label?: string }) {
   return (
     <div className="relative rounded-lg border border-[var(--border)] bg-[var(--code-bg)] overflow-hidden group">
@@ -11,45 +36,12 @@ function CodeBlock({ children, label }: { children: string; label?: string }) {
           <span>{label}</span>
         </div>
       )}
+      <CopyButton code={children} />
       <pre className="p-4 overflow-x-auto text-sm leading-relaxed font-mono">
         <code dangerouslySetInnerHTML={{ __html: colorize(children) }} />
       </pre>
     </div>
   );
-}
-
-function colorize(code: string): string {
-  return code
-    // Strings (double-quoted)
-    .replace(
-      /("(?:[^"\\]|\\.)*")/g,
-      '<span style="color:#a5d6a7">$1</span>'
-    )
-    // Single-quoted strings
-    .replace(
-      /('(?:[^'\\]|\\.)*')/g,
-      '<span style="color:#a5d6a7">$1</span>'
-    )
-    // Comments
-    .replace(
-      /(#.*?)(?=\n|$)/g,
-      '<span style="color:#616161">$1</span>'
-    )
-    // Python keywords
-    .replace(
-      /\b(from|import|async|await|def|with|as|try|except|print|return|True|False|None)\b/g,
-      '<span style="color:#ce93d8">$1</span>'
-    )
-    // Numbers (but not inside already-colored spans)
-    .replace(
-      /(?<!style="|color:|#|[a-zA-Z])\b(\d+\.?\d*)\b/g,
-      '<span style="color:#ffcc80">$1</span>'
-    )
-    // curl/http keywords
-    .replace(
-      /\b(curl|GET|POST|PUT|DELETE)\b/g,
-      '<span style="color:#80cbc4">$1</span>'
-    );
 }
 
 function Feature({
@@ -63,7 +55,7 @@ function Feature({
 }) {
   return (
     <div className="border border-[var(--border)] rounded-lg p-6 bg-[var(--card)] hover:border-zinc-600 transition">
-      <div className="text-lg mb-3">{icon}</div>
+      <div className="text-lg mb-3 font-mono">{icon}</div>
       <h3 className="text-base font-medium mb-2">{title}</h3>
       <p className="text-sm text-[var(--muted)] leading-relaxed">
         {description}
@@ -96,6 +88,8 @@ function Endpoint({
   );
 }
 
+/* ── Page ─────────────────────────────────────────────────────────── */
+
 export default function Home() {
   return (
     <div className="min-h-screen">
@@ -105,42 +99,19 @@ export default function Home() {
           <a href="/" className="font-mono font-bold text-lg tracking-tight">
             SecQL
           </a>
-          <div className="flex items-center gap-6">
-            <a
-              href="#api"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              API
-            </a>
-            <a
-              href="#sdk"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              SDK
-            </a>
-            <a
-              href="#pricing"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              Pricing
-            </a>
-            <a
-              href="https://github.com/jgaillard/secql"
-              target="_blank"
-              rel="noopener"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              GitHub
-            </a>
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#api" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">API</a>
+            <a href="#sdk" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">SDK</a>
+            <a href="#pricing" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">Pricing</a>
+            <a href="https://github.com/jgaillard/secql" target="_blank" rel="noopener" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">GitHub</a>
           </div>
+          <MobileNav />
         </div>
       </nav>
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-
         <div className="max-w-5xl mx-auto px-6 pt-28 pb-24 relative">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs text-[var(--muted)] font-mono mb-8 bg-[var(--card)]">
@@ -157,22 +128,15 @@ export default function Home() {
               structured financial data. 8,000+ companies. 10 years of history.
             </p>
             <div className="flex gap-3">
-              <a
-                href="#get-started"
-                className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition"
-              >
+              <a href="#get-started" className="px-6 py-3 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium hover:opacity-90 transition">
                 Get API Key
               </a>
-              <a
-                href="#api"
-                className="px-6 py-3 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--card)] transition"
-              >
+              <a href="#api" className="px-6 py-3 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--card)] transition">
                 View Docs
               </a>
             </div>
           </div>
 
-          {/* Hero code example */}
           <div className="mt-16">
             <CodeBlock label="Terminal">
               {`curl -H "X-API-Key: sk_live_..." \\
@@ -192,82 +156,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
-        <h2 className="text-2xl font-bold mb-3">
-          Built for fintech engineers
-        </h2>
-        <p className="text-[var(--muted)] mb-10 max-w-lg">
-          Stop parsing XBRL. Start building.
-        </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Feature
-            icon="{ }"
-            title="No XBRL complexity"
-            description="We parse the SEC's XML taxonomy so you don't have to. Get clean JSON with the metrics you actually need."
-          />
-          <Feature
-            icon="10y"
-            title="10 years of history"
-            description="Up to 40 quarters of financial data per company. Revenue, net income, assets, liabilities, EPS, and more."
-          />
-          <Feature
-            icon="8k+"
-            title="8,000+ companies"
-            description="Every public company that files with the SEC. Look up by ticker symbol, get data instantly."
-          />
-          <Feature
-            icon="py"
-            title="Python SDK"
-            description="Official SDK with sync and async clients, Pandas DataFrame export, and typed exception handling."
-          />
-          <Feature
-            icon="$"
-            title="From $0/month"
-            description="Generous free tier for prototyping. Pro at $19/mo for production. No surprises."
-          />
-          <Feature
-            icon="!?"
-            title="Structured errors"
-            description="Every error response includes a message, hint, and documentation link. No guessing what went wrong."
-          />
+      {/* Stats */}
+      <section className="max-w-5xl mx-auto px-6 py-16 border-t border-[var(--border)]">
+        <div className="grid grid-cols-3 gap-8 text-center">
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold">8,000+</div>
+            <div className="text-sm text-[var(--muted)] mt-1">Public companies</div>
+          </div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold">10 years</div>
+            <div className="text-sm text-[var(--muted)] mt-1">Historical data</div>
+          </div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold">4</div>
+            <div className="text-sm text-[var(--muted)] mt-1">Endpoints. That&apos;s it.</div>
+          </div>
         </div>
       </section>
 
-      {/* API Reference */}
-      <section
-        id="api"
-        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
-      >
-        <h2 className="text-2xl font-bold mb-2">API Endpoints</h2>
-        <p className="text-[var(--muted)] mb-10">
-          Four endpoints. That&apos;s it. Everything you need, nothing you
-          don&apos;t.
-        </p>
-
-        <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
-          <Endpoint
-            method="GET"
-            path="/companies/{ticker}"
-            description="Company profile — name, CIK, sector, exchange"
-          />
-          <Endpoint
-            method="GET"
-            path="/companies/{ticker}/financials"
-            description="Latest quarterly or annual financials"
-          />
-          <Endpoint
-            method="GET"
-            path="/companies/{ticker}/financials/history?periods=40"
-            description="Up to 40 periods of historical financial data"
-          />
-          <Endpoint
-            method="GET"
-            path="/companies/{ticker}/filings?limit=10"
-            description="Recent SEC filings with direct document URLs"
-          />
+      {/* Features */}
+      <section className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
+        <h2 className="text-2xl font-bold mb-3">Built for fintech engineers</h2>
+        <p className="text-[var(--muted)] mb-10 max-w-lg">Stop parsing XBRL. Start building.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Feature icon="{ }" title="No XBRL complexity" description="We parse the SEC's XML taxonomy so you don't have to. Get clean JSON with the metrics you actually need." />
+          <Feature icon="10y" title="10 years of history" description="Up to 40 quarters of financial data per company. Revenue, net income, assets, liabilities, EPS, and more." />
+          <Feature icon="8k+" title="8,000+ companies" description="Every public company that files with the SEC. Look up by ticker symbol, get data instantly." />
+          <Feature icon="py" title="Python SDK" description="Official SDK with sync and async clients, Pandas DataFrame export, and typed exception handling." />
+          <Feature icon="$" title="From $0/month" description="Generous free tier for prototyping. Pro at $19/mo for production. No surprises." />
+          <Feature icon="!?" title="Structured errors" description="Every error response includes a message, hint, and documentation link. No guessing what went wrong." />
         </div>
+      </section>
 
+      {/* Try It Live */}
+      <TryItDemo />
+
+      {/* API Reference */}
+      <section id="api" className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
+        <h2 className="text-2xl font-bold mb-2">API Endpoints</h2>
+        <p className="text-[var(--muted)] mb-10">Four endpoints. That&apos;s it. Everything you need, nothing you don&apos;t.</p>
+        <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6">
+          <Endpoint method="GET" path="/companies/{ticker}" description="Company profile — name, CIK, sector, exchange" />
+          <Endpoint method="GET" path="/companies/{ticker}/financials" description="Latest quarterly or annual financials" />
+          <Endpoint method="GET" path="/companies/{ticker}/financials/history?periods=40" description="Up to 40 periods of historical financial data" />
+          <Endpoint method="GET" path="/companies/{ticker}/filings?limit=10" description="Recent SEC filings with direct document URLs" />
+        </div>
         <div className="mt-8">
           <CodeBlock label="Response — /companies/AAPL/financials">
             {`{
@@ -289,15 +222,9 @@ export default function Home() {
       </section>
 
       {/* SDK */}
-      <section
-        id="sdk"
-        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
-      >
+      <section id="sdk" className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-2">Python SDK</h2>
-        <p className="text-[var(--muted)] mb-10">
-          Sync, async, and Pandas — all in one package.
-        </p>
-
+        <p className="text-[var(--muted)] mb-10">Sync, async, and Pandas — all in one package.</p>
         <div className="grid lg:grid-cols-2 gap-4">
           <CodeBlock label="Get started">
             {`from secql import SecQL
@@ -310,7 +237,6 @@ print(company.name)  # Apple Inc.
 financials = client.financials("AAPL")
 print(financials.revenue)  # 94930000000`}
           </CodeBlock>
-
           <CodeBlock label="Pandas integration">
             {`# Get 40 quarters as a DataFrame
 df = client.financials(
@@ -322,7 +248,6 @@ df = client.financials(
 df["margin"] = df["net_income"] / df["revenue"]
 df.plot(x="period", y="margin")`}
           </CodeBlock>
-
           <CodeBlock label="Async client">
             {`from secql import AsyncSecQL
 import asyncio
@@ -335,7 +260,6 @@ async def fetch():
         )
     return aapl, msft`}
           </CodeBlock>
-
           <CodeBlock label="Error handling">
             {`from secql.exceptions import (
     CompanyNotFound,
@@ -352,148 +276,126 @@ except RateLimited as e:
         </div>
       </section>
 
+      {/* Comparison */}
+      <section className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
+        <h2 className="text-2xl font-bold mb-2">How we compare</h2>
+        <p className="text-[var(--muted)] mb-10">Clean data, better DX, lower price.</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)]">
+                <th className="text-left py-3 pr-4 text-[var(--muted)] font-normal" />
+                <th className="text-left py-3 px-4 font-medium text-[var(--accent)]">SecQL</th>
+                <th className="text-left py-3 px-4 font-normal text-[var(--muted)]">SEC API</th>
+                <th className="text-left py-3 px-4 font-normal text-[var(--muted)]">FMP</th>
+                <th className="text-left py-3 px-4 font-normal text-[var(--muted)]">Raw EDGAR</th>
+              </tr>
+            </thead>
+            <tbody className="text-[var(--muted)]">
+              {[
+                ["Price", "Free / $19", "$49/mo", "$22/mo", "Free"],
+                ["Python SDK", "yes", "yes", "Community", "no"],
+                ["Pandas support", "yes", "no", "no", "no"],
+                ["Structured JSON", "yes", "yes", "yes", "no"],
+                ["Rate limit", "60/min", "20/sec", "300/min", "10/sec"],
+                ["Historical depth", "10 years", "30+ years", "5 years", "All"],
+                ["Setup time", "60 seconds", "Minutes", "Minutes", "Hours"],
+              ].map(([feature, secql, secapi, fmp, edgar]) => (
+                <tr key={feature} className="border-b border-[var(--border)]">
+                  <td className="py-3 pr-4 text-[var(--foreground)]">{feature}</td>
+                  <td className="py-3 px-4 text-[var(--foreground)]">
+                    {secql === "yes" ? (
+                      <span className="text-emerald-400">&#10003;</span>
+                    ) : secql === "no" ? (
+                      <span className="text-zinc-600">&#10005;</span>
+                    ) : (
+                      secql
+                    )}
+                  </td>
+                  {[secapi, fmp, edgar].map((val, i) => (
+                    <td key={i} className="py-3 px-4">
+                      {val === "yes" ? (
+                        <span className="text-emerald-400">&#10003;</span>
+                      ) : val === "no" ? (
+                        <span className="text-zinc-600">&#10005;</span>
+                      ) : (
+                        val
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       {/* Pricing */}
-      <section
-        id="pricing"
-        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
-      >
+      <section id="pricing" className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-2">Pricing</h2>
-        <p className="text-[var(--muted)] mb-10">
-          Start free. Scale when you&apos;re ready.
-        </p>
+        <p className="text-[var(--muted)] mb-10">Start free. Scale when you&apos;re ready.</p>
         <div className="grid sm:grid-cols-3 gap-4 max-w-3xl items-stretch">
           {/* Free */}
           <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
-            <div className="text-sm text-[var(--muted)] font-mono mb-3">
-              Free
-            </div>
+            <div className="text-sm text-[var(--muted)] font-mono mb-3">Free</div>
             <div className="flex items-baseline gap-1 mb-1">
               <span className="text-3xl font-bold">$0</span>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              No credit card required
-            </p>
+            <p className="text-sm text-[var(--muted)] mb-5">No credit card required</p>
             <ul className="space-y-2 text-sm flex-1">
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> 100
-                requests/day
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> 5 req/min
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> All endpoints
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> Python SDK
-              </li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> 100 requests/day</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> 5 req/min</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> All endpoints</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> Python SDK</li>
             </ul>
-            <a
-              href="#get-started"
-              className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
-            >
-              Get Free Key
-            </a>
+            <a href="#get-started" className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition">Get Free Key</a>
           </div>
-
           {/* Pro */}
           <div className="border-2 border-[var(--accent)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-sm text-[var(--muted)] font-mono">Pro</span>
-              <span className="px-1.5 py-0.5 bg-[var(--accent)] text-white text-[10px] font-medium rounded uppercase tracking-wide">
-                Popular
-              </span>
+              <span className="px-1.5 py-0.5 bg-[var(--accent)] text-white text-[10px] font-medium rounded uppercase tracking-wide">Popular</span>
             </div>
             <div className="flex items-baseline gap-1 mb-1">
               <span className="text-3xl font-bold">$19</span>
               <span className="text-[var(--muted)] text-sm">/mo</span>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              For production apps
-            </p>
+            <p className="text-sm text-[var(--muted)] mb-5">For production apps</p>
             <ul className="space-y-2 text-sm flex-1">
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> 50,000
-                requests/mo
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> 60 req/min
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> All endpoints
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> Python SDK +
-                Pandas
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span>{" "}
-                $0.002/req overage
-              </li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> 50,000 requests/mo</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> 60 req/min</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> All endpoints</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> Python SDK + Pandas</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> $0.002/req overage</li>
             </ul>
-            <a
-              href="#get-started"
-              className="block text-center px-4 py-2.5 mt-6 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition"
-            >
-              Start Pro
-            </a>
+            <a href="#get-started" className="block text-center px-4 py-2.5 mt-6 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:opacity-90 transition">Start Pro</a>
           </div>
-
           {/* Enterprise */}
           <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] p-6 flex flex-col">
-            <div className="text-sm text-[var(--muted)] font-mono mb-3">
-              Enterprise
-            </div>
+            <div className="text-sm text-[var(--muted)] font-mono mb-3">Enterprise</div>
             <div className="flex items-baseline gap-1 mb-1">
               <span className="text-3xl font-bold">Custom</span>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              For teams at scale
-            </p>
+            <p className="text-sm text-[var(--muted)] mb-5">For teams at scale</p>
             <ul className="space-y-2 text-sm flex-1">
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> Unlimited
-                requests
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> Custom rate
-                limits
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> SLA +
-                priority support
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-emerald-400">&#10003;</span> Dedicated
-                account
-              </li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> Unlimited requests</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> Custom rate limits</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> SLA + priority support</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">&#10003;</span> Dedicated account</li>
             </ul>
-            <a
-              href="mailto:contact@secql.dev"
-              className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition"
-            >
-              Contact Us
-            </a>
+            <a href="mailto:contact@secql.dev" className="block text-center px-4 py-2.5 mt-6 border border-[var(--border)] rounded-lg text-sm font-medium hover:bg-[var(--background)] transition">Contact Us</a>
           </div>
         </div>
       </section>
 
       {/* Get Started */}
-      <section
-        id="get-started"
-        className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]"
-      >
+      <section id="get-started" className="max-w-5xl mx-auto px-6 py-24 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-2">Get started in 60 seconds</h2>
-        <p className="text-[var(--muted)] mb-10">
-          Three steps. No credit card required.
-        </p>
-
+        <p className="text-[var(--muted)] mb-10">Three steps. No credit card required.</p>
         <div className="max-w-2xl space-y-6">
           <div className="flex items-start gap-5">
             <div className="flex flex-col items-center">
-              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
-                1
-              </span>
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">1</span>
               <div className="w-px h-full bg-[var(--border)] mt-2" />
             </div>
             <div className="pb-2 flex-1">
@@ -505,12 +407,9 @@ except RateLimited as e:
               </CodeBlock>
             </div>
           </div>
-
           <div className="flex items-start gap-5">
             <div className="flex flex-col items-center">
-              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
-                2
-              </span>
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">2</span>
               <div className="w-px h-full bg-[var(--border)] mt-2" />
             </div>
             <div className="pb-2 flex-1">
@@ -518,12 +417,9 @@ except RateLimited as e:
               <CodeBlock>{`pip install secql`}</CodeBlock>
             </div>
           </div>
-
           <div className="flex items-start gap-5">
             <div className="flex flex-col items-center">
-              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">
-                3
-              </span>
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-xs font-mono text-[var(--foreground)] font-medium">3</span>
             </div>
             <div className="flex-1">
               <p className="font-medium mb-3">Fetch your first data</p>
@@ -543,25 +439,12 @@ print(client.financials("AAPL"))`}
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <span className="font-mono font-bold text-sm">SecQL</span>
-            <span className="text-xs text-[var(--muted)]">
-              Clean SEC EDGAR data for developers
-            </span>
+            <span className="text-xs text-[var(--muted)]">Clean SEC EDGAR data for developers</span>
           </div>
           <div className="flex items-center gap-6">
-            <a
-              href="https://github.com/jgaillard/secql"
-              target="_blank"
-              rel="noopener"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              GitHub
-            </a>
-            <a
-              href="mailto:contact@secql.dev"
-              className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition"
-            >
-              Contact
-            </a>
+            <a href="https://github.com/jgaillard/secql" target="_blank" rel="noopener" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">GitHub</a>
+            <a href="https://pypi.org/project/secql/" target="_blank" rel="noopener" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">PyPI</a>
+            <a href="mailto:contact@secql.dev" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition">Contact</a>
           </div>
         </div>
       </footer>

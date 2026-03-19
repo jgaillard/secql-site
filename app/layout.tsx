@@ -14,6 +14,11 @@ export const metadata: Metadata = {
     siteName: "SecQL",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "SecQL — Clean SEC EDGAR Data for Developers",
+    description: "REST API + Python SDK for SEC financial data. 8,000+ companies, 10 years of history.",
+  },
 };
 
 export default function RootLayout({
